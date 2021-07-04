@@ -1,0 +1,24 @@
+# template for the Intel fortran compiler version 8
+# typical use with mkmf
+# mkmf -t template.ifc -c"-Duse_libMPI -Duse_netCDF" path_names /usr/local/include
+#FFLAGS = -stack_temps -safe_cray_ptr -ftz -i_dynamic -assume byterecl -O2 -i4 -r8 -w95
+#CPPFLAGS =  -I/usr/include -I/usr/local/include 
+#FC = ifort
+#LD = ifort
+#LDFLAGS = -L/usr/local/lib -lnetcdf_ifc
+#CFLAGS = -D__IFC
+
+FC = mpif90
+LD = mpif90
+NETCDF = ${NETCDF_HOME}
+MPICH = /n/helmod/apps/centos7/Comp/intel/17.0.4-fasrc01/openmpi/2.1.0-fasrc02
+#/n/sw/fasrcsw/apps/Comp/intel/15.0.0-fasrc01/openmpi/1.8.3-fasrc02
+#/n/sw/fasrcsw/apps/Comp/intel/13.0.079-fasrc01/openmpi/1.8.1-fasrc01
+LDFLAGS = -L${NETCDF}/lib64 -lnetcdff -lnetcdf -L${MPICH}/lib64 -lmpi 
+CFLAGS = -I${NETCDF}/include -I${MPICH}/include -D__IFC 
+## The "-DFMSmode" term is added to tell the radiative transfer routines that they are compiling in 3D, i.e. coupled to FMS
+FFLAGS = -DFMSmode -g -no-ftz -traceback -fp-stack-check -convert big_endian -safe_cray_ptr -ftz -i4 -r8 -fpp -O2 -I${NETCDF}/include -I${MPICH}/include -D__IFC
+
+#FFLAGS = -convert big_endian -safe_cray_ptr -ftz -i4 -r8 -fpp -O2 -I${NETCDF}/include -I${MPICH}/include -D__IFC
+#LDFLAGS = -L${NETCDF}/lib -lnetcdf -lnetcdff -L${MPICH}/lib
+#CFLAGS = -I${NETCDF}/include -I${MPICH}/include -D__IFC
